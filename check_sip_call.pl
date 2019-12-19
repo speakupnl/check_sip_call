@@ -129,8 +129,23 @@ $P->add_arg(
   help    => "--expires=seconds\n   Seconds for the register to expire (Default: 300) (Set -1 to disable)",
   default => 300,
 );
+$P->add_arg(
+  spec    => 'packetsize=s',
+  help    => "--packetsize=bytes\n   Generate packets with a certain size by adding random data",
+);
 
 $P->getopts;
+
+my $string;
+
+# Generate random data to increase packetsize
+if ($P->opts->packetsize) {
+   $string = "0"x$P->opts->packetsize;
+}
+
+my %extra_headers = (
+ 'X-BiggerPacket' => $string,
+);
 
 # Ensure global timeout, twice the timeout plus buffer
 alarm $P->opts->timeout * 2 + 2;
@@ -172,6 +187,7 @@ if ($P->opts->expires > 0) {
   )) if $ua->error;
 }
 
+
 # setup call
 my ($invite_final, $peer_hangup, $stopvar, $timeout_invite, $timeout_call);
 my $time_start = time();
@@ -183,6 +199,7 @@ $call = $ua->invite($P->opts->to,
   recv_bye      => \$peer_hangup,
   send_bye      => \$stopvar,
   cb_final      => \$invite_final,
+  sip_header	=> \%extra_headers,
 );
 
 plugin_exit(2, sprintf(

@@ -33,7 +33,7 @@ invites a peer (with authentication if necessary).
 ## Arguments
 
 ```
-Usage: check_sip_call.pl [-v] -F <SIP-URL> -T <SUP-URL>
+Usage: check_sip_call.pl [-v] -F <SIP-URL> -T <SUP-URL> 
 
  -?, --usage
    Print usage information
@@ -56,6 +56,10 @@ Usage: check_sip_call.pl [-v] -F <SIP-URL> -T <SUP-URL>
    username for authenticating to SIP registrar or proxy
  -P, --password=password
    password for authenticating to SIP registrar or proxy
+ --expires=seconds
+   Seconds for the register to expire (Default: 300) (Set -1 to disable)
+ --packetsize=bytes
+   Generate packets with a certain size by adding random data
  -t, --timeout=INTEGER
    Seconds before plugin times out (default: 15)
  -v, --verbose
